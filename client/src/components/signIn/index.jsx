@@ -1,23 +1,9 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { TextField } from 'material-ui';
-import { Button } from '@material-ui/core';
-
-import './signIn.css';
+import { useState } from 'react';
+import { TextField, Button, Stack } from '@mui/material';
 import { login } from '../../services/domainRequest/auth';
 import { setLoginSession } from '../../services/authService';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        '& > *': {
-            margin: theme.spacing(1),
-            width: '25ch',
-        },
-    },
-}));
-
 export default function SignIn({ setIsLoggedIn }) {
-    const classes = useStyles();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
 
@@ -31,17 +17,33 @@ export default function SignIn({ setIsLoggedIn }) {
 
     const onSubmit = async () => {
         const data = await login({ email, password });
-        if(data && !data.error) {
+        if (data && !data.error) {
             setLoginSession(data);
             setIsLoggedIn(true);
         }
-    }
+    };
 
     return (
-        <form className={classes.root} noValidate autoComplete="off">
-            <TextField onChange={onEmailChange} id="standard-basic" label="Standard" placeholder="Email"/>
-            <TextField onChange={onPasswordChange} id="standard-basic" label="Standard" placeholder="Password" type="password"/>
-            <Button onClick={onSubmit} variant="contained" color="primary">Sign In</Button>
-        </form>
-    )
+        <Stack spacing={2} sx={{ mt: 1 }}>
+            <TextField
+                label="Email"
+                type="email"
+                value={email}
+                onChange={onEmailChange}
+                size="small"
+                fullWidth
+            />
+            <TextField
+                label="Password"
+                type="password"
+                value={password}
+                onChange={onPasswordChange}
+                size="small"
+                fullWidth
+            />
+            <Button onClick={onSubmit} variant="contained"  fullWidth>
+                Sign In
+            </Button>
+        </Stack>
+    );
 }

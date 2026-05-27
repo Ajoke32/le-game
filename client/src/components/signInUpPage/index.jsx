@@ -1,38 +1,26 @@
-import * as React from 'react';
-import './signInUpPage.css';
+import { useState } from 'react';
+import { Box, Paper, Tabs, Tab, Typography } from '@mui/material';
 import SignIn from '../signIn';
 import SignUp from '../signUp';
 
-const signPages = {
-    signIn: 0,
-    signUp: 1
-};
+export default function SignInSignUpPage({ setIsLoggedIn }) {
+    const [tab, setTab] = useState(1);
 
-class SignInSignUpPage extends React.Component {
-    state = {
-        index: signPages.signUp
-    };
-
-    setIndex = (index) => {
-        this.setState({ index });
-    }
-
-    render() {
-        const { index } = this.state;
-
-        return (
-            <div id="sign-in-up">
-                <div id="form-wrapper">
-                    <div className="header">
-                        <div onClick={() => this.setIndex(signPages.signIn)} className={`${index === signPages.signIn ? 'active' : ''}`}>Sign In</div>
-                        <div onClick={() => this.setIndex(signPages.signUp)} className={`${index === signPages.signUp ? 'active' : ''}`}>Sign Up</div>
-                    </div>
-                    {index === signPages.signIn ? <SignIn setIsLoggedIn={this.props.setIsLoggedIn} /> : <SignUp setIsLoggedIn={this.props.setIsLoggedIn}/>}
-                </div>
-            </div>
-        );
-    }
+    return (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+            <Paper elevation={3} sx={{ p: 4, width: 360 }}>
+                <Typography variant="h5" align="center" gutterBottom>
+                    Welcome
+                </Typography>
+                <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="fullWidth" sx={{ mb: 2 }}>
+                    <Tab label="Sign In" value={0} />
+                    <Tab label="Sign Up" value={1} />
+                </Tabs>
+                {tab === 0
+                    ? <SignIn setIsLoggedIn={setIsLoggedIn} />
+                    : <SignUp setIsLoggedIn={setIsLoggedIn} />
+                }
+            </Paper>
+        </Box>
+    );
 }
-
-
-export default SignInSignUpPage;

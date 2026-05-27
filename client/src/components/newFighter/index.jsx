@@ -1,8 +1,6 @@
-import { TextField } from "material-ui"
-import { createFighter } from "../../services/domainRequest/fightersRequest";
-import React, { useState } from "react";
-import { Button } from "@material-ui/core";
-import './newFighter.css';
+import { useState } from 'react';
+import { TextField, Button, Stack, Paper, Typography } from '@mui/material';
+import { createFighter } from '../../services/domainRequest/fightersRequest';
 
 export default function NewFighter({ onCreated }) {
     const [name, setName] = useState();
@@ -25,18 +23,20 @@ export default function NewFighter({ onCreated }) {
 
     const onSubmit = async () => {
         const data = await createFighter({ name, power, defense });
-        if(data && !data.error) {
+        if (data && !data.error) {
             onCreated(data);
         }
-    }
+    };
 
     return (
-        <div id="new-fighter">
-            <div>New Fighter</div>
-            <TextField onChange={onNameChange} id="standard-basic" label="Standard" placeholder="Name"/>
-            <TextField onChange={onPowerChange} id="standard-basic" label="Standard" placeholder="Power" type="number" />
-            <TextField onChange={onDefenseChange} id="standard-basic" label="Standard" placeholder="Defense" type="number" />
-            <Button onClick={onSubmit} variant="contained" color="primary">Create</Button>
-        </div>
+        <Paper elevation={2} sx={{ p: 3, width: '50%', mx: 'auto', mt: 2 }}>
+            <Typography variant="h6" align="center" gutterBottom>New Fighter</Typography>
+            <Stack spacing={2}>
+                <TextField label="Name" value={name} onChange={onNameChange} size="small" fullWidth />
+                <TextField label="Power" type="number" value={power} onChange={onPowerChange} size="small" fullWidth />
+                <TextField label="Defense" type="number" value={defense} onChange={onDefenseChange} size="small" fullWidth />
+                <Button variant="contained" onClick={onSubmit} fullWidth>Create</Button>
+            </Stack>
+        </Paper>
     );
-};
+}

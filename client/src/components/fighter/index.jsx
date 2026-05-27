@@ -1,52 +1,36 @@
-import React, { useState } from 'react';
-import { FormControl, InputLabel, makeStyles, Select } from '@material-ui/core';
-import { MenuItem } from 'material-ui';
-
-const useStyles = makeStyles((theme) => ({
-    formControl: {
-        margin: theme.spacing(1),
-        minWidth: 120,
-    },
-    selectEmpty: {
-        marginTop: theme.spacing(2),
-    },
-}));
+import { useState } from 'react';
+import { FormControl, InputLabel, Select, MenuItem, Box, Typography, Chip } from '@mui/material';
 
 export default function Fighter({ fightersList, onFighterSelect, selectedFighter }) {
-    const classes = useStyles();
-    const [fighter, setFighter] = useState();
+    const [value, setValue] = useState('');
 
     const handleChange = (event) => {
-        debugger;
-        setFighter(event.target.value);
-        onFighterSelect(event.target.value);
+        const fighter = fightersList.find((f) => f.id === event.target.value) || null;
+        setValue(event.target.value);
+        onFighterSelect(fighter);
     };
 
     return (
-        <div>
-            <FormControl className={classes.formControl}>
-                <InputLabel id="simple-select-label">Select Fighter</InputLabel>
-                <Select
-                    labelId="simple-select-label"
-                    id="simple-select"
-                    value={fighter}
-                    onChange={handleChange}
-                >
-                    {fightersList.map((it, index) => {
-                        return (
-                            <MenuItem key={`${index}`} value={it}>{it.name}</MenuItem>
-                        );
-                    })}
+        <Box sx={{ p: 2, flex: 1 }}>
+            <FormControl fullWidth size="small">
+                <InputLabel>Select Fighter</InputLabel>
+                <Select value={value} label="Select Fighter" onChange={handleChange}>
+                    <MenuItem value=""><em>None</em></MenuItem>
+                    {fightersList.map((f) => (
+                        <MenuItem key={f.id} value={f.id}>{f.name}</MenuItem>
+                    ))}
                 </Select>
-                {selectedFighter
-                    ? <div>
-                        <div>Name: {selectedFighter.name}</div>
-                        <div>Power: {selectedFighter.power}</div>
-                        <div>Defense: {selectedFighter.defense}</div>
-                        <div>Health: {selectedFighter.health}</div>
-                    </div>
-                    : null
-                }
             </FormControl>
-        </div>)
+            {selectedFighter && (
+                <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    <Typography variant="subtitle1" fontWeight="bold">{selectedFighter.name}</Typography>
+                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                        <Chip label={`Power: ${selectedFighter.power}`} color="error" size="small" />
+                        <Chip label={`Defense: ${selectedFighter.defense}`} color="primary" size="small" />
+                        <Chip label={`Health: ${selectedFighter.health}`} color="success" size="small" />
+                    </Box>
+                </Box>
+            )}
+        </Box>
+    );
 }

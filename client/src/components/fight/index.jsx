@@ -1,75 +1,43 @@
-import React from 'react';
-
+import { useState, useEffect } from 'react';
+import { Box, Button, Divider, Paper } from '@mui/material';
 import { getFighters } from '../../services/domainRequest/fightersRequest';
 import NewFighter from '../newFighter';
 import Fighter from '../fighter';
-import { Button } from '@material-ui/core';
 
-import './fight.css'
+export default function Fight() {
+    const [fighters, setFighters] = useState([]);
+    const [fighter1, setFighter1] = useState(null);
+    const [fighter2, setFighter2] = useState(null);
 
-class Fight extends React.Component {
-    state = {
-        fighters: [],
-        fighter1: null,
-        fighter2: null
+    useEffect(() => {
+        getFighters().then((data) => {
+            if (data && !data.error) {
+                setFighters(data);
+            }
+        });
+    }, []);
+
+    const onCreate = (fighter) => {
+        setFighters((prev) => [...prev, fighter]);
     };
 
-    async componentDidMount() {
-        const fighters = await getFighters();
-        if(fighters && !fighters.error) {
-            this.setState({ fighters });
-        }
-    }
+    const fighter1List = fighter2 ? fighters.filter((f) => f.id !== fighter2.id) : fighters;
+    const fighter2List = fighter1 ? fighters.filter((f) => f.id !== fighter1.id) : fighters;
 
-    onFightStart = () => {
-        
-    }
-
-    onCreate = (fighter) => {
-        this.setState({ fighters: [...this.state.fighters, fighter] });
-    }
-
-    onFighter1Select = (fighter1) => {
-        this.setState({fighter1 });
-    }
-
-    onFighter2Select = (fighter2) => {
-        this.setState({ fighter2 });
-    }
-
-    getFighter1List = () => {
-        const { fighter2, fighters } = this.state;
-        if(!fighter2) {
-            return fighters;
-        }
-
-        return fighters.filter(it => it.id !== fighter2.id);
-    }
-
-    getFighter2List = () => {
-        const { fighter1, fighters } = this.state;
-        if(!fighter1) {
-            return fighters;
-        }
-
-        return fighters.filter(it => it.id !== fighter1.id);
-    }
-
-    render() {
-        const  { fighter1, fighter2 } = this.state;
-        return (
-            <div id="wrapper">
-                <NewFighter onCreated={this.onCreate} />
-                <div id="figh-wrapper">
-                    <Fighter selectedFighter={fighter1} onFighterSelect={this.onFighter1Select} fightersList={this.getFighter1List() || []} />
-                    <div className="btn-wrapper">
-                        <Button onClick={this.onFightStart} variant="contained" color="primary">Start Fight</Button>
-                    </div>
-                    <Fighter selectedFighter={fighter2} onFighterSelect={this.onFighter2Select} fightersList={this.getFighter2List() || []} />
-                </div>
-            </div>
-        );
-    }
+    return (
+        <Box sx={{ mt: 4 }}>
+            <NewFighter onCreated={onCreate} />
+            <Paper elevation={2} sx={{ width: '70%', mx: 'auto', mt: 3, display: 'flex', alignItems: 'flex-start' }}>
+                <Fighter selectedFighter={fighter1} onFighterSelect={setFighter1} fightersList={fighter1List} />
+                <Divider orientation="vertical" flexItem />
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', px: 2, pt: 2 }}>
+                    <Button variant="contained" color="secondary" disabled={!fighter1 || !fighter2}>
+                        Start Fight
+                    </Button>
+                </Box>
+                <Divider orientation="vertical" flexItem />
+                <Fighter selectedFighter={fighter2} onFighterSelect={setFighter2} fightersList={fighter2List} />
+            </Paper>
+        </Box>
+    );
 }
-
-export default Fight;

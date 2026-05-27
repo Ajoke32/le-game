@@ -1,22 +1,9 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { TextField } from 'material-ui';
-import { Button } from '@material-ui/core';
-
+import { useState } from 'react';
+import { TextField, Button, Stack } from '@mui/material';
 import { createUser } from '../../services/domainRequest/userRequest';
 import { setLoginSession } from '../../services/authService';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        '& > *': {
-            margin: theme.spacing(1),
-            width: '25ch',
-        },
-    },
-}));
-
 export default function SignUp({ setIsLoggedIn }) {
-    const classes = useStyles();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [firstName, setFirstName] = useState();
@@ -42,24 +29,23 @@ export default function SignUp({ setIsLoggedIn }) {
     const onPhoneChange = (event) => {
         setPhone(event.target.value);
     }
-    
-    
+
     const onSubmit = async () => {
         const data = await createUser({ email, password, firstName, lastName, phone });
-        if(data && !data.error) {
+        if (data && !data.error) {
             setLoginSession(data);
             setIsLoggedIn(true);
         }
-    }
+    };
 
     return (
-        <form className={classes.root} noValidate autoComplete="off">
-            <TextField key="first-name" onChange={onFirstNameChange} id="standard-basic" label="Standard" placeholder="First Name"/>
-            <TextField key="last-name" onChange={onLastNameChange} id="standard-basic" label="Standard" placeholder="Last Name"/>
-            <TextField key="email" onChange={onEmailChange} id="standard-basic" label="Standard" placeholder="Email"/>
-            <TextField key="phone" onChange={onPhoneChange} id="standard-basic" label="Standard" placeholder="Phone Number"/>
-            <TextField key="password" onChange={onPasswordChange} id="standard-basic" label="Standard" placeholder="Password" type="password"/>
-            <Button onClick={onSubmit} variant="contained" color="primary">Sign Up</Button>
-        </form>
-    )
+        <Stack spacing={2} sx={{ mt: 1 }}>
+            <TextField key="first-name" label="First Name" value={firstName} onChange={onFirstNameChange} size="small" fullWidth />
+            <TextField key="last-name" label="Last Name" value={lastName} onChange={onLastNameChange} size="small" fullWidth />
+            <TextField key="email" label="Email" type="email" value={email} onChange={onEmailChange} size="small" fullWidth />
+            <TextField key="phone" label="Phone Number" value={phone} onChange={onPhoneChange} size="small" fullWidth />
+            <TextField key="password" label="Password" type="password" value={password} onChange={onPasswordChange} size="small" fullWidth />
+            <Button variant="contained" onClick={onSubmit} fullWidth>Sign Up</Button>
+        </Stack>
+    );
 }

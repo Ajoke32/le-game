@@ -1,13 +1,20 @@
-import { FIGHTER } from "../models/fighter.js";
+import { runValidators } from "../validation/helpers.js";
+import {
+  createFighterValidators,
+  updateFighterValidators,
+} from "../validation/fighter.js";
 
-const createFighterValid = (req, res, next) => {
-  // TODO: Implement validatior for FIGHTER entity during creation
-  next();
+const validate = (validators) => (req, res, next) => {
+  const message = runValidators(req.body, validators);
+
+  if (message) {
+    return next(new Error(message));
+  }
+
+  return next();
 };
 
-const updateFighterValid = (req, res, next) => {
-  // TODO: Implement validatior for FIGHTER entity during update
-  next();
-};
+const createFighterValid = validate(createFighterValidators);
+const updateFighterValid = validate(updateFighterValidators);
 
 export { createFighterValid, updateFighterValid };

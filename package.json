@@ -9,8 +9,8 @@
     "url": "https://github.com/BinaryStudioAcademy/lecture-starter-nodejs.git"
   },
   "scripts": {
-    "test": "sh -c 'env REPO_URL=$0 npx mocha tests/**/*.spec.js -R JSON --exit'",
-    "test-local": "./node_modules/.bin/mocha tests/**/*.spec.js --exit -R JSON",
+    "test": "vitest run",
+    "test-local": "vitest run",
     "start": "node index.js",
     "build-front": "cd client && npm run build",
     "feedback": "node ./feedback/index.js",
@@ -31,5 +31,8 @@
   "engines": {
     "node": "22.x.x",
     "npm": "11.x.x"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.7"
   }
 }

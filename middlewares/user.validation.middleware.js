@@ -1,13 +1,17 @@
-import { USER } from "../models/user.js";
+import { runValidators } from "../validation/helpers.js";
+import { createUserValidators, updateUserValidators } from "../validation/user.js";
 
-const createUserValid = (req, res, next) => {
-  // TODO: Implement validatior for USER entity during creation
-  next();
+const validate = (validators) => (req, res, next) => {
+  const message = runValidators(req.body, validators);
+
+  if (message) {
+    return next(new Error(message));
+  }
+
+  return next();
 };
 
-const updateUserValid = (req, res, next) => {
-  // TODO: Implement validatior for user entity during update
-  next();
-};
+const createUserValid = validate(createUserValidators);
+const updateUserValid = validate(updateUserValidators);
 
 export { createUserValid, updateUserValid };

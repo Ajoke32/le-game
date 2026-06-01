@@ -52,7 +52,7 @@ export default function Fight() {
     };
 
     return (
-        <Box sx={{ mt: 4 }}>
+        <Box sx={{ mt: 4, pb: 8, boxSizing: 'border-box' }}>
             <NewFighter onCreated={onCreate} />
             <Paper elevation={2} sx={{ width: '70%', mx: 'auto', mt: 3, display: 'flex', alignItems: 'flex-start' }}>
                 <Fighter selectedFighter={fighter1} onFighterSelect={setFighter1} fightersList={fighter1List} />
@@ -65,9 +65,9 @@ export default function Fight() {
                 <Divider orientation="vertical" flexItem />
                 <Fighter selectedFighter={fighter2} onFighterSelect={setFighter2} fightersList={fighter2List} />
             </Paper>
-            <Paper elevation={2} sx={{ width: '70%', mx: 'auto', mt: 3, p: 2 }}>
+            <Paper elevation={2} sx={{ width: '70%', mx: 'auto', mt: 3, mb: 4, p: 2 }}>
                 <Typography variant="h6" gutterBottom>Fight History</Typography>
-                <List dense disablePadding>
+                <List dense disablePadding sx={{ maxHeight: 260, overflowY: 'auto' }}>
                     {fights.map((fight) => (
                         <ListItem key={fight.id} divider>
                             <ListItemText
